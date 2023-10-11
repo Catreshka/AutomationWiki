@@ -14,7 +14,8 @@ public class SearchPageObject extends MainPageObject{
             SEARCH_RESULT_CLICK_BY_SUBSTRING_TITLE_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING_TITLE}']",
             SEARCH_AMOUNT_RESULT = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@resource-id='org.wikipedia:id/page_list_item_title']",
             SEARCH_RESULT_LIST = "org.wikipedia:id/search_results_list",
-            SEARCH_ITEM = "org.wikipedia:id/page_list_item_title";
+            SEARCH_ITEM = "org.wikipedia:id/page_list_item_title",
+            SEARCH_RESULT_TITLE_AND_DESCRIPTION = "//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{SUBSTRING_DESCRIPTION}']/preceding-sibling::android.widget.TextView[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING_TITLE}']";
 
     public SearchPageObject(AppiumDriver driver)
     {
@@ -29,6 +30,10 @@ public class SearchPageObject extends MainPageObject{
     private static String getResultSearchTitleElement(String substring)
     {
         return SEARCH_RESULT_CLICK_BY_SUBSTRING_TITLE_TPL.replace("{SUBSTRING_TITLE}",substring);
+    }
+    private static String getResultSearchTitleAndDescription(String substring_title,String substring_description)
+    {
+        return SEARCH_RESULT_TITLE_AND_DESCRIPTION.replace("{SUBSTRING_TITLE}",substring_title).replace("{SUBSTRING_DESCRIPTION}",substring_description);
     }
     /*TEMPLATES METHODS */
 
@@ -99,5 +104,10 @@ public class SearchPageObject extends MainPageObject{
     public void searchExpectedText(String expected_text)
     {
         this.assertElementHasText(By.xpath(SEARCH_INIT_AND_INPUT_ELEMENT), expected_text, "Element does not exist", "Element does not equal " + expected_text);
+    }
+    public void waitForElementByTitleAndDescription(String title, String description)
+    {
+        String search_result_for_two_condition = getResultSearchTitleAndDescription(title, description);
+        this.waitForElementPresent(By.xpath(search_result_for_two_condition),"Cannot find element with title " + title + " and description " + description,10);
     }
 }

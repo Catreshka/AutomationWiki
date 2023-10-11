@@ -77,4 +77,21 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.typeSearchLine(search_line);
         SearchPageObject.findWordInSearchResult(search_line);
     }
+    @Test
+    public void testFindSearchResultForTwoCondition()
+    {
+        SkipPageObject SkipPageObject = new SkipPageObject(driver);
+        SkipPageObject.initSkipOnboarding();
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+
+        String search_line = "Test";
+        SearchPageObject.typeSearchLine(search_line);
+
+        String title = "Test";
+        String description = "Topics referred to by the same term";
+
+        SearchPageObject.waitForElementByTitleAndDescription(title,description);
+    }
 }
