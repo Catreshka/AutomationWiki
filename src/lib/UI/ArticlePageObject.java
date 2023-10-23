@@ -1,14 +1,12 @@
 package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ArticlePageObject extends MainPageObject {
-
     private static final String
-            TITLE_IN_FOLDER_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING_TITLE}']",
-            TITLE_IN_ARTICLE = "//*[@resource-id='pcs-edit-section-title-description']/preceding-sibling::android.view.View";
+            TITLE_IN_FOLDER_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING_TITLE}']",
+            TITLE_IN_ARTICLE = "xpath://*[@resource-id='pcs-edit-section-title-description']/preceding-sibling::android.view.View";
     public ArticlePageObject(AppiumDriver driver)
     {
         super(driver);
@@ -24,7 +22,7 @@ public class ArticlePageObject extends MainPageObject {
     public WebElement waitForTitleElementInFolder(String substring)
     {
         String element_result_present_xpath = getTitleElement(substring);
-        return this.waitForElementPresent(By.xpath(element_result_present_xpath),"Cannot find " + substring + " article in folder",7);
+        return this.waitForElementPresent(element_result_present_xpath,"Cannot find " + substring + " article in folder",7);
     }
     public String getArticleTitleInFolder(String substring)
     {
@@ -34,11 +32,11 @@ public class ArticlePageObject extends MainPageObject {
 
     public WebElement waitForTitleElementInArticle()
     {
-        return this.waitForElementPresent(By.xpath(TITLE_IN_ARTICLE),"Cannot find title in article",10);
+        return this.waitForElementPresent(TITLE_IN_ARTICLE,"Cannot find title in article",10);
     }
     public void waitForTitleElementInArticleWithoutTimeout()
     {
-        this.assertElementPresent(By.xpath(TITLE_IN_ARTICLE),"Cannot find title in article");
+        this.assertElementPresent(TITLE_IN_ARTICLE,"Cannot find title in article");
     }
     public String getTitleInArticle()
     {
@@ -50,14 +48,12 @@ public class ArticlePageObject extends MainPageObject {
     {
         this.waitForArticleToAppearByTitle(substring);
         String element_for_swipe = getTitleElement(substring);
-        this.swipeElementToLeft(By.xpath(element_for_swipe),"Cannot find " + substring + " article in saved folder");
+        this.swipeElementToLeft(element_for_swipe,"Cannot find " + substring + " article in saved folder");
     }
 
     public void waitForArticleToAppearByTitle(String substring)
     {
         String article_xpath = getTitleElement(substring);
-        this.waitForElementPresent(By.xpath(article_xpath),"Cannot find saved article by title " + substring,15);
+        this.waitForElementPresent(article_xpath,"Cannot find saved article by title " + substring,15);
     }
-
-
 }
