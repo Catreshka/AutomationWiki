@@ -1,10 +1,8 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.UI.ArticlePageObject;
-import lib.UI.BottomToolbarArticleUI;
-import lib.UI.SearchPageObject;
-import lib.UI.SkipPageObject;
+import lib.UI.*;
+import lib.UI.factory.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class ArticleTests extends CoreTestCase {
@@ -12,10 +10,7 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testSwipeArticle()
     {
-        SkipPageObject SkipPageObject = new SkipPageObject(driver);
-        SkipPageObject.initSkipOnboarding();
-
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
 
         String searchWord = "Appium";
@@ -56,10 +51,7 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testFindTitle()
     {
-        SkipPageObject SkipPageObject = new SkipPageObject(driver);
-        SkipPageObject.initSkipOnboarding();
-
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
 
         String search_line = "Appium";
