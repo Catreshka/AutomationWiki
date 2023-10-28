@@ -84,7 +84,6 @@ abstract public class SearchPageObject extends MainPageObject{
         String search_result_xpath = getResultSearchTitleElement(substring);
         this.waitForElementAndClick(search_result_xpath,"Cannot find and click search result with substring " + substring,15);
     }
-
     public int getAmountOfFoundArticles()
     {
         this.waitForElementPresent(
@@ -94,7 +93,6 @@ abstract public class SearchPageObject extends MainPageObject{
         );
         return this.getAmountOfElements(SEARCH_AMOUNT_RESULT);
     }
-
     public void findWordInSearchResult(String search_line)
     {
         this.waitForWordInElement(SEARCH_RESULT_LIST, SEARCH_ITEM, "Cannot find " + search_line + " in each search result", search_line);

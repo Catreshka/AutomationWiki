@@ -1,12 +1,15 @@
 package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
-    private static final String
-            TITLE_IN_FOLDER_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING_TITLE}']",
-            TITLE_IN_ARTICLE = "xpath://*[@resource-id='pcs-edit-section-title-description']/preceding-sibling::android.view.View";
+abstract public class ArticlePageObject extends MainPageObject {
+    protected static String
+            TITLE_IN_FOLDER_TPL,
+            TITLE_IN_ARTICLE,
+            BUTTON_DELETE,
+            SUBTITLE_TPL;
     public ArticlePageObject(AppiumDriver driver)
     {
         super(driver);
@@ -17,6 +20,10 @@ public class ArticlePageObject extends MainPageObject {
     {
         return TITLE_IN_FOLDER_TPL.replace("{SUBSTRING_TITLE}",substring);
     }
+    private static String getSubTitleElement(String substring)
+    {
+        return SUBTITLE_TPL.replace("{SUBSTRING_SUBTITLE}",substring);
+    }
     /*TEMPLATES METHODS */
 
     public WebElement waitForTitleElementInFolder(String substring)
@@ -24,10 +31,34 @@ public class ArticlePageObject extends MainPageObject {
         String element_result_present_xpath = getTitleElement(substring);
         return this.waitForElementPresent(element_result_present_xpath,"Cannot find " + substring + " article in folder",7);
     }
+
+    public WebElement waitForSubTitleElement(String substring)
+    {
+        String element_result_present_xpath = getSubTitleElement(substring);
+        return this.waitForElementPresent(element_result_present_xpath,"Cannot find " + substring + " article in folder",7);
+    }
     public String getArticleTitleInFolder(String substring)
     {
         WebElement title_element_in_folder = waitForTitleElementInFolder(substring);
-        return title_element_in_folder.getAttribute("text");
+        String element=null;
+        if (Platform.getInstance().isAndroid()) {
+            element = "text";
+        } else if (Platform.getInstance().isiOS()) {
+            element = "value";
+        }
+        return title_element_in_folder.getAttribute(element);
+    }
+
+    public String getArticleSubTitle(String substring)
+    {
+        WebElement subtitle_element_in_folder = waitForSubTitleElement(substring);
+        String element=null;
+        if (Platform.getInstance().isAndroid()) {
+            element = "text";
+        } else if (Platform.getInstance().isiOS()) {
+            element = "value";
+        }
+        return subtitle_element_in_folder.getAttribute(element);
     }
 
     public WebElement waitForTitleElementInArticle()
@@ -49,6 +80,9 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForArticleToAppearByTitle(substring);
         String element_for_swipe = getTitleElement(substring);
         this.swipeElementToLeft(element_for_swipe,"Cannot find " + substring + " article in saved folder");
+        if (Platform.getInstance().isiOS()) {
+            this.waitForElementAndClick(BUTTON_DELETE,"Cannot fine delete button",5);
+        }
     }
 
     public void waitForArticleToAppearByTitle(String substring)

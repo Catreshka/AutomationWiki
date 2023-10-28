@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import lib.UI.ArticlePageObject;
 import lib.UI.SearchPageObject;
+import lib.UI.factory.ArticlePageObjectFactory;
 import lib.UI.factory.SearchPageObjectFactory;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class ChangeAppConditionTests extends CoreTestCase {
         String article_title = "Appium";
         SearchPageObject.clickByArticleWithSubstring(article_title);
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         String titleBeforeRotation = ArticlePageObject.getTitleInArticle();
 
         this.rotateScreenLandscape();

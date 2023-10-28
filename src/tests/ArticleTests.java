@@ -1,7 +1,10 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.UI.*;
+import lib.UI.factory.ArticlePageObjectFactory;
+import lib.UI.factory.BottomToolbarArticleUIFactory;
 import lib.UI.factory.SearchPageObjectFactory;
 import org.junit.Test;
 
@@ -16,14 +19,15 @@ public class ArticleTests extends CoreTestCase {
         String searchWord = "Appium";
         String nameArticleOne = "Appium";
         String nameArticleTwo = "Appius Claudius Caecus";
+        String subArticleTwo ="Roman statesman";
 
         SearchPageObject.typeSearchLine(searchWord);
         SearchPageObject.clickByArticleWithSubstring(nameArticleOne);
 
         String name_folder = "My first folder";
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-        BottomToolbarArticleUI BottomToolbarArticleUI = new BottomToolbarArticleUI(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
+        BottomToolbarArticleUI BottomToolbarArticleUI = BottomToolbarArticleUIFactory.get(driver);
 
         BottomToolbarArticleUI.addToList();
         BottomToolbarArticleUI.createMyList(name_folder);
@@ -35,17 +39,29 @@ public class ArticleTests extends CoreTestCase {
         BottomToolbarArticleUI.addToExistList(name_folder);
         BottomToolbarArticleUI.viewExistListAfterSave();
 
-        ArticlePageObject.swipeElementDelete(nameArticleOne);
+        ArticlePageObject.swipeElementDelete(nameArticleOne); //не работает swipe
         SearchPageObject.waitForSearchNoResult(nameArticleOne);
 
-        String article_title_in_folder = ArticlePageObject.getArticleTitleInFolder(nameArticleTwo);
-        SearchPageObject.clickByArticleWithSubstring(nameArticleTwo);
-        String article_title_in_article = ArticlePageObject.getTitleInArticle();
-        assertEquals(
-                "We see unexpected title",
-                article_title_in_article,
-                article_title_in_folder
-        );
+        if (Platform.getInstance().isAndroid()) {
+            String article_title_in_folder = ArticlePageObject.getArticleTitleInFolder(nameArticleTwo);
+            SearchPageObject.clickByArticleWithSubstring(nameArticleTwo);
+            String article_title_in_article = ArticlePageObject.getTitleInArticle();
+            assertEquals(
+                    "We see unexpected title",
+                    article_title_in_article,
+                    article_title_in_folder
+            );
+        } else if (Platform.getInstance().isiOS()) {
+            String article_subtitle_in_folder = ArticlePageObject.getArticleSubTitle(subArticleTwo);
+            SearchPageObject.clickByArticleWithSubstring(nameArticleTwo);
+            String article_subtitle_in_article = ArticlePageObject.getArticleSubTitle(subArticleTwo);
+
+            assertEquals(
+                    "We see unexpected subtitle",
+                    article_subtitle_in_folder,
+                    article_subtitle_in_article
+            );
+        }
     }
 
     @Test
@@ -59,7 +75,7 @@ public class ArticleTests extends CoreTestCase {
 
         String article_title = "Appium";
         SearchPageObject.clickByArticleWithSubstring(article_title);
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         ArticlePageObject.waitForTitleElementInArticleWithoutTimeout();
     }
 }

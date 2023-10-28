@@ -13,7 +13,6 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import java.util.List;
 import java.time.Duration;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class MainPageObject {
@@ -96,12 +95,19 @@ public class MainPageObject {
         int upper_y = element.getLocation().getY();
         int lower_y = upper_y + element.getSize().getHeight();
         int middle_y = (upper_y+lower_y) / 2;
-        new TouchAction(driver)
-                .press(PointOption.point(right_x-10, middle_y))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
-                .moveTo(PointOption.point(left_x +10, middle_y))
-                .release()
-                .perform();
+
+        TouchAction action = new TouchAction(driver);
+        action.press(PointOption.point(right_x-10, middle_y));
+        action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
+
+        if (Platform.getInstance().isAndroid()) {
+            action.moveTo(PointOption.point(left_x +10, middle_y));
+        } else {
+            int offset_x = (-1 * element.getSize().getWidth());
+            action.moveTo(PointOption.point(offset_x,0));
+        }
+        action.release();
+        action.perform();
     }
 
     public void assertElementPresent (String locator, String error_message)

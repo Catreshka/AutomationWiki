@@ -1,15 +1,18 @@
 package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
-public class BottomToolbarArticleUI extends MainPageObject {
+import lib.Platform;
 
-    private static final String
-            BUTTON_PAGE_SAVE = "id:org.wikipedia:id/page_save",
-            BUTTON_ADD_TO_LIST = "xpath://*[@resource-id='org.wikipedia:id/snackbar_action'][@text='Add to list']",
-            INPUT_NAME_OF_FOLDER = "xpath://*[contains(@text,'Name of this list')]",
-            BUTTON_OK = "xpath://*[@resource-id='android:id/button1'][@text='OK']",
-            NAME_OF_EXIST_LIST_TPL = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='{SUBSTRING_NAME_OF_LIST}']",
-            BUTTON_VIEW_LIST = "xpath://*[@resource-id='org.wikipedia:id/snackbar_action'][@text='View list']";
+abstract public class BottomToolbarArticleUI extends MainPageObject {
+
+    protected static String
+            BUTTON_PAGE_SAVE,
+            BUTTON_ADD_TO_LIST,
+            INPUT_NAME_OF_FOLDER,
+            BUTTON_OK,
+            NAME_OF_EXIST_LIST_TPL,
+            BUTTON_VIEW_LIST,
+            BUTTON_CREATE_NEW_LIST;
 
     public BottomToolbarArticleUI(AppiumDriver driver)
     {
@@ -26,10 +29,16 @@ public class BottomToolbarArticleUI extends MainPageObject {
     {
         this.waitForElementAndClick(BUTTON_PAGE_SAVE, "Cannot find Save button", 5);
         this.waitForElementAndClick(BUTTON_ADD_TO_LIST, "Cannot find button 'Add to list'", 5);
+        if (Platform.getInstance().isiOS()) {
+            this.waitForElementAndClick(BUTTON_ADD_TO_LIST, "Cannot find button 'Add to list'", 5);
+        }
     }
 
     public void createMyList(String name_of_folder)
     {
+        if (Platform.getInstance().isiOS()) {
+            this.waitForElementAndClick(BUTTON_CREATE_NEW_LIST, "Cannot find button 'Create new list'",15);
+        }
         this.waitForElementAndSendKeys(INPUT_NAME_OF_FOLDER, name_of_folder, "Cannot find input for write name of this list", 5);
         this.waitForElementAndClick(BUTTON_OK, "Cannot find button 'OK'", 5);
 
