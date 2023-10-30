@@ -2,6 +2,7 @@ package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -12,9 +13,14 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import java.util.List;
 import java.time.Duration;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class MainPageObject {
+
+    protected static String
+            SKIP_ELEMENT="xpath://*[contains(@text,'Skip')]";
+
     protected AppiumDriver driver;
     public MainPageObject(AppiumDriver driver)
     {
@@ -67,13 +73,15 @@ public class MainPageObject {
     }
 
     public void waitForWordInElement(String externalLocator, String internalLocator, String error_message, String value) {
-        driver.hideKeyboard();
+        if (Platform.getInstance().isAndroid()) {
+            driver.hideKeyboard();
+        }
         By by_external = this.getLocatorByString(externalLocator);
         waitForElementPresent(externalLocator, error_message);
         WebElement element= driver.findElement(by_external);
         By by_internal = this.getLocatorByString(internalLocator);
         List<WebElement> titles= element.findElements(by_internal);
-        boolean result = titles.stream().allMatch(selectText -> selectText.getText().contains(value));
+        boolean result = titles.stream().allMatch(selectText -> selectText.getText().toLowerCase().contains(value));
         Assert.assertTrue(error_message, result);
     }
 
@@ -126,5 +134,10 @@ public class MainPageObject {
         } else {
             throw new IllegalArgumentException("Cannot get type of locator. Locator " + locator);
         }
+    }
+
+    public void clickSkip()
+    {
+        this.waitForElementAndClick(SKIP_ELEMENT, "Cannot find button Skip",5);
     }
 }
