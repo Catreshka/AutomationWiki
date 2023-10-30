@@ -1,18 +1,18 @@
 package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.TouchAction;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
+
 import java.util.List;
-import java.time.Duration;
+
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class MainPageObject {
@@ -86,28 +86,18 @@ public class MainPageObject {
 
     public void swipeElementToLeft(String locator, String error_message)
     {
-        WebElement element = waitForElementPresent(
+        RemoteWebElement carousel = (RemoteWebElement) waitForElementPresent(
                 locator,
                 error_message,
                 10);
-        int left_x = element.getLocation().getX();
-        int right_x = left_x + element.getSize().getWidth();
-        int upper_y = element.getLocation().getY();
-        int lower_y = upper_y + element.getSize().getHeight();
-        int middle_y = (upper_y+lower_y) / 2;
-
-        TouchAction action = new TouchAction(driver);
-        action.press(PointOption.point(right_x-10, middle_y));
-        action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
-
-        if (Platform.getInstance().isAndroid()) {
-            action.moveTo(PointOption.point(left_x +10, middle_y));
-        } else {
-            int offset_x = (-1 * element.getSize().getWidth());
-            action.moveTo(PointOption.point(offset_x,0));
-        }
-        action.release();
-        action.perform();
+        driver.executeScript(
+                "gesture: swipe",
+                Map.of("elementId",
+                        carousel.getId(),
+                        "percentage",
+                        50,
+                        "direction",
+                        "left"));
     }
 
     public void assertElementPresent (String locator, String error_message)

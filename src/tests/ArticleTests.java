@@ -39,8 +39,8 @@ public class ArticleTests extends CoreTestCase {
         BottomToolbarArticleUI.addToExistList(name_folder);
         BottomToolbarArticleUI.viewExistListAfterSave();
 
-        ArticlePageObject.swipeElementDelete(nameArticleOne); //не работает swipe
-        SearchPageObject.waitForSearchNoResult(nameArticleOne);
+        ArticlePageObject.swipeElementDelete(nameArticleTwo);
+        SearchPageObject.waitForSearchNoResult(nameArticleTwo);
 
         if (Platform.getInstance().isAndroid()) {
             String article_title_in_folder = ArticlePageObject.getArticleTitleInFolder(nameArticleTwo);
