@@ -1,6 +1,9 @@
 package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -10,6 +13,8 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.SQLOutput;
+import java.time.Duration;
 import java.util.List;
 
 import java.util.Map;
@@ -86,18 +91,35 @@ public class MainPageObject {
 
     public void swipeElementToLeft(String locator, String error_message)
     {
-        RemoteWebElement carousel = (RemoteWebElement) waitForElementPresent(
+        TouchAction touchAction = new TouchAction(driver);
+
+        WebElement element = waitForElementPresent(
                 locator,
                 error_message,
                 10);
-        driver.executeScript(
-                "gesture: swipe",
-                Map.of("elementId",
-                        carousel.getId(),
-                        "percentage",
-                        50,
-                        "direction",
-                        "left"));
+
+        int width = element.getSize().getWidth();
+        int height = element.getSize().getHeight();
+
+        int startX = element.getLocation().getX() + width;
+        int startY = element.getLocation().getY() + (height / 2);
+        int endX = element.getLocation().getX();
+        int endY = startY;
+
+        System.out.println(width);
+        System.out.println(height);
+        System.out.println(startX);
+        System.out.println(startY);
+        System.out.println(endX);
+        System.out.println(endY);
+        System.out.println(element.getLocation().getX());
+        System.out.println(element.getLocation().getY());
+
+        touchAction.press(PointOption.point(startX, startY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+                .moveTo(PointOption.point(-100, startY))
+                .release()
+                .perform();
     }
 
     public void assertElementPresent (String locator, String error_message)
