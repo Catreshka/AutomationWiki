@@ -2,18 +2,22 @@ package lib.UI;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
-import java.util.List;
+
+import java.sql.SQLOutput;
 import java.time.Duration;
-import java.util.Locale;
+import java.util.List;
+
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class MainPageObject {
@@ -87,19 +91,33 @@ public class MainPageObject {
 
     public void swipeElementToLeft(String locator, String error_message)
     {
+        TouchAction touchAction = new TouchAction(driver);
+
         WebElement element = waitForElementPresent(
                 locator,
                 error_message,
                 10);
-        int left_x = element.getLocation().getX();
-        int right_x = left_x + element.getSize().getWidth();
-        int upper_y = element.getLocation().getY();
-        int lower_y = upper_y + element.getSize().getHeight();
-        int middle_y = (upper_y+lower_y) / 2;
-        new TouchAction(driver)
-                .press(PointOption.point(right_x-10, middle_y))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
-                .moveTo(PointOption.point(left_x +10, middle_y))
+
+        int width = element.getSize().getWidth();
+        int height = element.getSize().getHeight();
+
+        int startX = element.getLocation().getX() + width;
+        int startY = element.getLocation().getY() + (height / 2);
+        int endX = element.getLocation().getX();
+        int endY = startY;
+
+        System.out.println(width);
+        System.out.println(height);
+        System.out.println(startX);
+        System.out.println(startY);
+        System.out.println(endX);
+        System.out.println(endY);
+        System.out.println(element.getLocation().getX());
+        System.out.println(element.getLocation().getY());
+
+        touchAction.press(PointOption.point(startX, startY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+                .moveTo(PointOption.point(-100, startY))
                 .release()
                 .perform();
     }

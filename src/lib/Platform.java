@@ -56,10 +56,10 @@ public class Platform {
     {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "Wiki");
-        capabilities.setCapability("platformVersion", "16.4");
+        capabilities.setCapability("deviceName", "wik");
+        capabilities.setCapability("platformVersion", "14.4");
         capabilities.setCapability("appium:automationName", "XCUITest");
-        capabilities.setCapability("app", "/Users/bashkirceva/AutomationWiki/AutomationWiki/apks/Wikipedia.app");
+        capabilities.setCapability("app", "/Users/bashkirceva/AutomationWiki/AutomationWiki/apks/Wikipediya.app");
         return capabilities;
     }
 
